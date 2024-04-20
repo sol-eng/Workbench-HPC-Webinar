@@ -1,0 +1,26 @@
+{
+    "id": "E29E1415",
+    "path": "~/Workbench-HPC-Webinar/crew.cluster/compute2.R",
+    "project_path": "compute2.R",
+    "type": "r_source",
+    "hash": "3759242561",
+    "contents": "",
+    "dirty": false,
+    "created": 1713604022988.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "58,0",
+        "scrollLine": "41"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1713607411,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1713607411688,
+    "read_only": false,
+    "read_only_alternatives": []
+}

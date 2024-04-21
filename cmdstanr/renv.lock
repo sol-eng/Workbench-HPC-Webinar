@@ -25,6 +25,10 @@
       {
         "Name": "BioCbooks",
         "URL": "https://packagemanager.posit.co/bioconductor/packages/3.18/books"
+      },
+      {
+        "Name": "STAN",
+        "URL": "https://mc-stan.org/r-packages/"
       }
     ]
   },

@@ -28,7 +28,7 @@
       },
       {
         "Name": "STAN",
-        "URL": "https://mc-stan.org/r-packages/"
+        "URL": "https://mc-stan.org/r-packages"
       }
     ]
   },
@@ -47,13 +47,24 @@
       "Package": "RCurl",
       "Version": "1.98-1.14",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
       "Requirements": [
         "R",
         "bitops",
         "methods"
       ],
       "Hash": "47f648d288079d0c696804ad4e55197e"
+    },
+    "Rcpp": {
+      "Package": "Rcpp",
+      "Version": "1.0.12",
+      "Source": "Repository",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
+      "Requirements": [
+        "methods",
+        "utils"
+      ],
+      "Hash": "5ea2700d21e038ace58269ecdbeb9ec0"
     },
     "abind": {
       "Package": "abind",
@@ -81,7 +92,7 @@
       "Package": "bitops",
       "Version": "1.0-7",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
       "Hash": "b7d8d8ee39869c18d8846a184dd8a1af"
     },
     "checkmate": {
@@ -107,6 +118,23 @@
       ],
       "Hash": "1216ac65ac55ec0058a6f75d7ca0fd52"
     },
+    "clustermq": {
+      "Package": "clustermq",
+      "Version": "0.9.4",
+      "Source": "Repository",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
+      "Requirements": [
+        "R",
+        "R6",
+        "Rcpp",
+        "globals",
+        "methods",
+        "narray",
+        "progress",
+        "utils"
+      ],
+      "Hash": "e4f8e89f5c705e9ec9c723dbb98d24c0"
+    },
     "cmdstanr": {
       "Package": "cmdstanr",
       "Version": "0.7.1",
@@ -124,6 +152,28 @@
         "withr"
       ],
       "Hash": "7d975b08a9b0ff7bfb037c432a1ef0f8"
+    },
+    "codetools": {
+      "Package": "codetools",
+      "Version": "0.2-20",
+      "Source": "Repository",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
+      "Requirements": [
+        "R"
+      ],
+      "Hash": "61e097f35917d342622f21cdc79c256e"
+    },
+    "crayon": {
+      "Package": "crayon",
+      "Version": "1.5.2",
+      "Source": "Repository",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
+      "Requirements": [
+        "grDevices",
+        "methods",
+        "utils"
+      ],
+      "Hash": "e8a1e41acf02548751f45c718d55aa6a"
     },
     "data.table": {
       "Package": "data.table",
@@ -175,6 +225,17 @@
       ],
       "Hash": "15e9634c0fcd294799e9b2e929ed1b86"
     },
+    "globals": {
+      "Package": "globals",
+      "Version": "0.16.3",
+      "Source": "Repository",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
+      "Requirements": [
+        "R",
+        "codetools"
+      ],
+      "Hash": "2580567908cafd4f187c1e5a91e98b7f"
+    },
     "glue": {
       "Package": "glue",
       "Version": "1.7.0",
@@ -185,6 +246,20 @@
         "methods"
       ],
       "Hash": "e0b3a53876554bd45879e596cdb10a52"
+    },
+    "hms": {
+      "Package": "hms",
+      "Version": "1.1.3",
+      "Source": "Repository",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
+      "Requirements": [
+        "lifecycle",
+        "methods",
+        "pkgconfig",
+        "rlang",
+        "vctrs"
+      ],
+      "Hash": "b59377caa7ed00fa41808342002138f9"
     },
     "jsonlite": {
       "Package": "jsonlite",
@@ -228,6 +303,21 @@
         "R"
       ],
       "Hash": "4b3ea27a19d669c0405b38134d89a9d1"
+    },
+    "narray": {
+      "Package": "narray",
+      "Version": "0.5.1",
+      "Source": "Repository",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
+      "Requirements": [
+        "R",
+        "Rcpp",
+        "progress",
+        "stats",
+        "stringr",
+        "utils"
+      ],
+      "Hash": "7ec5a2396d3c9ad4374495283dfcdc83"
     },
     "numDeriv": {
       "Package": "numDeriv",
@@ -288,6 +378,16 @@
       ],
       "Hash": "8dac526a34b9eb62305d16c04cb57837"
     },
+    "prettyunits": {
+      "Package": "prettyunits",
+      "Version": "1.2.0",
+      "Source": "Repository",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
+      "Requirements": [
+        "R"
+      ],
+      "Hash": "6b01fc98b1e86c4f705ce9dcfd2f57c7"
+    },
     "processx": {
       "Package": "processx",
       "Version": "3.8.4",
@@ -300,6 +400,20 @@
         "utils"
       ],
       "Hash": "0c90a7d71988856bad2a2a45dd871bb9"
+    },
+    "progress": {
+      "Package": "progress",
+      "Version": "1.2.3",
+      "Source": "Repository",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
+      "Requirements": [
+        "R",
+        "R6",
+        "crayon",
+        "hms",
+        "prettyunits"
+      ],
+      "Hash": "f4625e061cb2865f111b47ff163a5ca6"
     },
     "ps": {
       "Package": "ps",
@@ -332,6 +446,36 @@
         "utils"
       ],
       "Hash": "42548638fae05fd9a9b5f3f437fbbbe2"
+    },
+    "stringi": {
+      "Package": "stringi",
+      "Version": "1.8.3",
+      "Source": "Repository",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
+      "Requirements": [
+        "R",
+        "stats",
+        "tools",
+        "utils"
+      ],
+      "Hash": "058aebddea264f4c99401515182e656a"
+    },
+    "stringr": {
+      "Package": "stringr",
+      "Version": "1.5.1",
+      "Source": "Repository",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/focal/latest",
+      "Requirements": [
+        "R",
+        "cli",
+        "glue",
+        "lifecycle",
+        "magrittr",
+        "rlang",
+        "stringi",
+        "vctrs"
+      ],
+      "Hash": "960e2ae9e09656611e0b8214ad543207"
     },
     "tensorA": {
       "Package": "tensorA",

@@ -1,6 +1,6 @@
 # prerequisites
 # install cmdstan 
-cmdstanr::install_cmdstan(overwrite=TRUE)
+cmdstanr::install_cmdstan()
 
 # Get STAN model
 write(RCurl::getURI("https://raw.githubusercontent.com/stan-dev/cmdstanr/master/vignettes/articles-online-only/opencl-files/bernoulli_logit_glm.stan"),"model.stan")
@@ -13,7 +13,7 @@ y <- rbinom(n, size = 1, prob = plogis(3 * X[,1] - 2 * X[,2] + 1))
 mdata <- list(k = k, n = n, y = y, X = X)
 
 # Compile and run the model on the CPU
-mod_cpu <- cmdstanr::cmdstan_model("model.stan", force_recompile = TRUE)
+mod_cpu <- cmdstanr::cmdstan_model("model.stan")
 system.time(fit_cpu <- mod_cpu$sample(data = mdata, chains = 4, parallel_chains = 4, refresh = 0))
 
 fx<-function(x) mod_cpu$sample(data = mdata, chains = 4, parallel_chains = 4, refresh = 0)

@@ -1,0 +1,3 @@
+options(clustermq.scheduler = "slurm")
+#below is optional if the SLURM commands are not in the default PATH
+#Sys.setenv("PATH"=paste0("/opt/slurm/bin/:",Sys.getenv("PATH")))

@@ -6,7 +6,7 @@ cmdstanr::install_cmdstan(overwrite=TRUE)
 write(RCurl::getURI("https://raw.githubusercontent.com/stan-dev/cmdstanr/master/vignettes/articles-online-only/opencl-files/bernoulli_logit_glm.stan"),"model.stan")
 
 # Generate some fake data
-n <- 250000
+n <- 25000
 k <- 20
 X <- matrix(rnorm(n * k), ncol = k)
 y <- rbinom(n, size = 1, prob = plogis(3 * X[,1] - 2 * X[,2] + 1))

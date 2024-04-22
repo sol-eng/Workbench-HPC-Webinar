@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.3.3",
+    "Version": "4.3.2",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -9,7 +9,7 @@
     ]
   },
   "Python": {
-    "Version": "3.11.8",
+    "Version": "3.11.6",
     "Type": "virtualenv",
     "Name": "./renv/python/virtualenvs/renv-python-3.11"
   },
@@ -103,17 +103,6 @@
         "yaml"
       ],
       "Hash": "8b7222e9d9eb5178eea545c0c4d33fc2"
-    },
-    "fs": {
-      "Package": "fs",
-      "Version": "1.6.3",
-      "Source": "Repository",
-      "Repository": "RSPM",
-      "Requirements": [
-        "R",
-        "methods"
-      ],
-      "Hash": "47b5f30c720c23999b913a1a635cf0bb"
     },
     "generics": {
       "Package": "generics",

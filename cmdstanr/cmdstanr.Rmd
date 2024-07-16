@@ -1,0 +1,81 @@
+---
+title: "cmdstanr"
+output: html_notebook
+---
+
+This is an example on how to use [cmdstanr](https://mc-stan.org/cmdstanr/).
+
+# Prerequisites (one-time setup)
+
+First of all, you need to install `cmdstan`. We are making use of all the cores we have available via the `parallelly` package. Compiling C++ code is inherently slow so let's make sure we use all available resources. Additionally we are specifying a specific `cmdstan` version for both good practice and increased reproducibility. 
+
+```{r message=FALSE, warning=FALSE}
+library(cmdstanr)
+cmdstanr::install_cmdstan(
+  version = "2.34.1", 
+  cores = parallelly::availableCores()
+  )
+```
+
+Please note you always can rebuild cmdstan via the `rebuild_cmdstan()` function. 
+
+# Example
+
+## Creating a model
+
+We will download the `bernoulli_logit_glm` model from the `cmdstanr` vignette and save it as `model.stan`. 
+
+```{r}
+write(
+  RCurl::getURI(
+    "https://raw.githubusercontent.com/stan-dev/cmdstanr/master/vignettes/articles-online-only/opencl-files/bernoulli_logit_glm.stan"
+    ),
+  "model.stan")
+```
+
+## Data creation
+
+```{r}
+n <- 25000
+k <- 20
+X <- matrix(rnorm(n * k), ncol = k)
+y <- rbinom(n, size = 1, prob = plogis(3 * X[,1] - 2 * X[,2] + 1))
+mdata <- list(k = k, n = n, y = y, X = X)
+```
+
+## Compile the model 
+
+```{r}
+mod_cpu <- cmdstanr::cmdstan_model("model.stan")
+```
+
+## Run the model
+
+```{r}
+system.time(fit_cpu <- mod_cpu$sample(data = mdata, chains = 4, parallel_chains = 4, refresh = 0))
+```
+
+# Appendix
+
+## Working with GPUs 
+
+`cmdstan` uses OpenCL to make use of a GPU. We will need to build `cmdstan` and link against OpenCL. 
+
+```{r}
+cpp_options = list(
+  "LDFLAGS+= -lOpenCL"
+)
+
+cmdstan_dir="~/.cmdstan-gpu"
+dir.create(cmdstan_dir)
+cmdstanr::install_cmdstan(version="2.34.1",
+                          dir=cmdstan_dir,
+                          cpp_options=cpp_options,
+                          cores=parallelly::availableCores())
+```
+
+For each `cmdstan` execution leveraging GPUs we now have to point to this `cmdstan` install
+
+```{r}
+cmdstanr::set_cmdstan_path(paste(cmdstan_dir,"cmdstan-2.34.1",sep="/"))
+```

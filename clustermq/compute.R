@@ -15,7 +15,7 @@ library(clustermq)
 
 samples=1000
 # run a big-ish compute job
-res <- clustermq::Q(compute, n = 1:samples, n_jobs = 20,chunk_size=10)
+res <- clustermq::Q(compute, n = 1:samples, n_jobs = 2,chunk_size=10)
 
 # create new data
 new_dat <- tibble::tribble(

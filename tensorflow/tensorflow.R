@@ -6,6 +6,10 @@ library(tfdatasets)
 
 set.seed(1234)
 
+config = tf$config
+config$gpu_options$per_process_gpu_memory_fraction <- 0.25
+tf$compat$v1$InteractiveSession(config=config)
+
 url <- "https://download.microsoft.com/download/3/E/1/3E1C3F21-ECDB-4869-8368-6DEBA77B919F/kagglecatsanddogs_5340.zip"
 options(timeout = 60 * 5) # 5 minutes
 if(!file.exists("kagglecatsanddogs_5340.zip")) download.file(url, destfile = "kagglecatsanddogs_5340.zip") # (786.7 MB)

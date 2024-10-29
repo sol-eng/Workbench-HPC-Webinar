@@ -1,16 +1,16 @@
 library(clustermq)
 
-
 compute <- function(n) {
   .libPaths(libpath)
   library(palmerpenguins)
   library(dplyr)
   peng <- penguins %>% 
+    filter(!is.na(species) & !is.na(sex)) %>%
     mutate(
       species = as.factor(species),
       sex = as.factor(sex)
     ) %>% 
-    sample_n(200)
+    sample_n(333)
   glm(body_mass_g ~ species + sex, data = peng)
 }
 
@@ -52,4 +52,3 @@ res <- clustermq::Q(compute,
                     export=list(libpath=folder),
                     template=list(cores=1,memory=1024),
                     log_worker = TRUE)
-

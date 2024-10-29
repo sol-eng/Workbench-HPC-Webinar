@@ -12,7 +12,7 @@ First of all, you need to install `cmdstan`. We are making use of all the cores 
 ```{r message=FALSE, warning=FALSE}
 library(cmdstanr)
 cmdstanr::install_cmdstan(
-  version = "2.34.1", 
+  version = "2.35.0", 
   cores = parallelly::availableCores()
   )
 ```
@@ -68,7 +68,7 @@ cpp_options = list(
 
 cmdstan_dir="~/.cmdstan-gpu"
 dir.create(cmdstan_dir)
-cmdstanr::install_cmdstan(version="2.34.1",
+cmdstanr::install_cmdstan(version="2.35.0",
                           dir=cmdstan_dir,
                           cpp_options=cpp_options,
                           cores=parallelly::availableCores())
@@ -77,5 +77,5 @@ cmdstanr::install_cmdstan(version="2.34.1",
 For each `cmdstan` execution leveraging GPUs we now have to point to this `cmdstan` install
 
 ```{r}
-cmdstanr::set_cmdstan_path(paste(cmdstan_dir,"cmdstan-2.34.1",sep="/"))
+cmdstanr::set_cmdstan_path(paste(cmdstan_dir,"cmdstan-2.35.0",sep="/"))
 ```

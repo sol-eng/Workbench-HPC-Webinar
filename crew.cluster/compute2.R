@@ -1,11 +1,12 @@
 # example courtesy of Andrie de Vries (andrie@posit.co)
 compute <- function(n) {
   peng <- penguins %>% 
+    filter(!is.na(species) & !is.na(sex)) %>%
     mutate(
       species = as.factor(species),
       sex = as.factor(sex)
     ) %>% 
-    sample_n(100)
+    sample_n(333)
   glm(body_mass_g ~ species + sex, data = peng)
 }
 
@@ -49,7 +50,6 @@ new_dat <- tibble::tribble(
 library(purrr)
 library(tibble)
 preds <- tibble(mass = map_dbl(res$result, predict, new_dat))
-
 
 # plot the result
 library(ggplot2)

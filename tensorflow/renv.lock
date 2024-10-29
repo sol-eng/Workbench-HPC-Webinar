@@ -1,22 +1,42 @@
 {
   "R": {
-    "Version": "4.3.2",
+    "Version": "4.4.1",
     "Repositories": [
       {
         "Name": "CRAN",
-        "URL": "https://packagemanager.posit.co/cran/latest"
+        "URL": "https://packagemanager.posit.co/cran/2024-08-13"
+      },
+      {
+        "Name": "BioCsoft",
+        "URL": "https://packagemanager.posit.co/bioconductor/packages/3.19/bioc"
+      },
+      {
+        "Name": "BioCann",
+        "URL": "https://packagemanager.posit.co/bioconductor/packages/3.19/data/annotation"
+      },
+      {
+        "Name": "BioCexp",
+        "URL": "https://packagemanager.posit.co/bioconductor/packages/3.19/data/experiment"
+      },
+      {
+        "Name": "BioCworkflows",
+        "URL": "https://packagemanager.posit.co/bioconductor/packages/3.19/workflows"
+      },
+      {
+        "Name": "BioCbooks",
+        "URL": "https://packagemanager.posit.co/bioconductor/packages/3.19/books"
       }
     ]
   },
   "Python": {
-    "Version": "3.11.6",
+    "Version": "3.12.4",
     "Type": "virtualenv",
-    "Name": "./renv/python/virtualenvs/renv-python-3.11"
+    "Name": "./renv/python/virtualenvs/renv-python-3.12"
   },
   "Packages": {
     "Matrix": {
       "Package": "Matrix",
-      "Version": "1.6-5",
+      "Version": "1.7-0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -29,7 +49,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "8c7115cd3a0e048bda2a7cd110549f7a"
+      "Hash": "1920b2f11133b12350024297d8a4ff4a"
     },
     "R6": {
       "Package": "R6",
@@ -43,14 +63,14 @@
     },
     "Rcpp": {
       "Package": "Rcpp",
-      "Version": "1.0.12",
+      "Version": "1.0.13",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
         "methods",
         "utils"
       ],
-      "Hash": "5ea2700d21e038ace58269ecdbeb9ec0"
+      "Hash": "f27411eb6d9c3dada5edd444b8416675"
     },
     "RcppTOML": {
       "Package": "RcppTOML",
@@ -65,13 +85,13 @@
     },
     "backports": {
       "Package": "backports",
-      "Version": "1.4.1",
+      "Version": "1.5.0",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "R"
       ],
-      "Hash": "c39fbec8a30d23e721980b8afb31984c"
+      "Hash": "e1e1b9d75c37401117b636b7ae50827a"
     },
     "base64enc": {
       "Package": "base64enc",
@@ -85,14 +105,14 @@
     },
     "cli": {
       "Package": "cli",
-      "Version": "3.6.2",
+      "Version": "3.6.3",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
         "R",
         "utils"
       ],
-      "Hash": "1216ac65ac55ec0058a6f75d7ca0fd52"
+      "Hash": "b21916dd77a27642b447374a5d30ecf3"
     },
     "config": {
       "Package": "config",
@@ -148,9 +168,9 @@
     },
     "keras": {
       "Package": "keras",
-      "Version": "2.13.0",
+      "Version": "2.15.0",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "R",
         "R6",
@@ -164,11 +184,11 @@
         "tfruns",
         "zeallot"
       ],
-      "Hash": "311b595378023f7db42eebb614cd7e75"
+      "Hash": "f98205897f72de92a8ba318fd2d2808e"
     },
     "lattice": {
       "Package": "lattice",
-      "Version": "0.22-5",
+      "Version": "0.22-6",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -179,7 +199,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "7c5e89f04e72d6611c77451f6331a091"
+      "Hash": "cc5ac1ba4c238c7ca9fa6a87ca11a7e2"
     },
     "lifecycle": {
       "Package": "lifecycle",
@@ -229,14 +249,14 @@
     },
     "ps": {
       "Package": "ps",
-      "Version": "1.7.6",
+      "Version": "1.7.7",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "R",
         "utils"
       ],
-      "Hash": "dd2b9319ee0656c8acf45c7f40c59de7"
+      "Hash": "878b467580097e9c383acbb16adab57a"
     },
     "rappdirs": {
       "Package": "rappdirs",
@@ -260,9 +280,9 @@
     },
     "reticulate": {
       "Package": "reticulate",
-      "Version": "1.35.0",
+      "Version": "1.38.0",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "Matrix",
         "R",
@@ -278,18 +298,18 @@
         "utils",
         "withr"
       ],
-      "Hash": "90be16b53b955990db4aa355c03d85eb"
+      "Hash": "8810e64cfe0240afe926617a854a38a4"
     },
     "rlang": {
       "Package": "rlang",
-      "Version": "1.1.3",
+      "Version": "1.1.4",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
         "R",
         "utils"
       ],
-      "Hash": "42548638fae05fd9a9b5f3f437fbbbe2"
+      "Hash": "3eec01f8b1dee337674b2e34ab1f9bc1"
     },
     "rprojroot": {
       "Package": "rprojroot",
@@ -310,9 +330,9 @@
     },
     "tensorflow": {
       "Package": "tensorflow",
-      "Version": "2.15.0",
+      "Version": "2.16.0",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "R",
         "config",
@@ -326,7 +346,7 @@
         "utils",
         "yaml"
       ],
-      "Hash": "5cbbc5d5d7cfd16678035eb6b905f50b"
+      "Hash": "7ac4bb91e88d010d750a8cdf45914f7c"
     },
     "tfautograph": {
       "Package": "tfautograph",
@@ -342,9 +362,9 @@
     },
     "tfdatasets": {
       "Package": "tfdatasets",
-      "Version": "2.9.0",
+      "Version": "2.17.0",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "R",
         "generics",
@@ -356,13 +376,13 @@
         "tidyselect",
         "vctrs"
       ],
-      "Hash": "82f917d08beeb050653676ccaef597ea"
+      "Hash": "47ebc17a5ce48791e5107b91b27d1ce9"
     },
     "tfruns": {
       "Package": "tfruns",
-      "Version": "1.5.2",
+      "Version": "1.5.3",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "R",
         "base64enc",
@@ -377,7 +397,7 @@
         "whisker",
         "yaml"
       ],
-      "Hash": "f2193f71320c7d006fbff9880b4188f0"
+      "Hash": "84569fd1acfb6c2744df727ab4a34591"
     },
     "tidyselect": {
       "Package": "tidyselect",
@@ -418,22 +438,22 @@
     },
     "withr": {
       "Package": "withr",
-      "Version": "3.0.0",
+      "Version": "3.0.1",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "R",
         "grDevices",
         "graphics"
       ],
-      "Hash": "d31b6c62c10dcf11ec530ca6b0dd5d35"
+      "Hash": "07909200e8bbe90426fbfeb73e1e27aa"
     },
     "yaml": {
       "Package": "yaml",
-      "Version": "2.3.8",
+      "Version": "2.3.10",
       "Source": "Repository",
-      "Repository": "RSPM",
-      "Hash": "29240487a071f535f5e5d5a323b7afbd"
+      "Repository": "CRAN",
+      "Hash": "51dab85c6c98e50a18d7551e9d49f76c"
     },
     "zeallot": {
       "Package": "zeallot",

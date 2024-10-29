@@ -1763,183 +1763,79 @@ all available resources. Additionally we are specifying a specific
 reproducibility.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY21kc3RhbnI6Omluc3RhbGxfY21kc3RhbihcbiAgdmVyc2lvbiA9IFxcMi4zNC4xXFwsIFxuICBjb3JlcyA9IHBhcmFsbGVsbHk6OmF2YWlsYWJsZUNvcmVzKClcbiAgKVxuYGBgXG5gYGAifQ== -->
-<pre class="r"><code>```r
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShjbWRzdGFucilcbmNtZHN0YW5yOjppbnN0YWxsX2NtZHN0YW4oXG4gIHZlcnNpb24gPSBcIjIuMzQuMVwiLCBcbiAgY29yZXMgPSBwYXJhbGxlbGx5OjphdmFpbGFibGVDb3JlcygpXG4gIClcbmBgYCJ9 -->
+<pre class="r"><code>library(cmdstanr)
 cmdstanr::install_cmdstan(
-  version = \2.34.1\, 
+  version = &quot;2.34.1&quot;, 
   cores = parallelly::availableCores()
   )</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-Please note you always can rebuild cmdstan via the `rebuild_cmdstan()` function. 
-
-# Example
-
-## Creating a model
-
-We will download the `bernoulli_logit_glm` model from the `cmdstanr` vignette and save it as `model.stan`. 
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxud3JpdGUoXG4gIFJDdXJsOjpnZXRVUkkoXG4gICAgXFxodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vc3Rhbi1kZXYvY21kc3RhbnIvbWFzdGVyL3ZpZ25ldHRlcy9hcnRpY2xlcy1vbmxpbmUtb25seS9vcGVuY2wtZmlsZXMvYmVybm91bGxpX2xvZ2l0X2dsbS5zdGFuXFxcbiAgICApLFxuICBcXG1vZGVsLnN0YW5cXClcbmBgYFxuYGBgIn0= --&gt;
-
-```r
-```r
-write(
-  RCurl::getURI(
-    \https://raw.githubusercontent.com/stan-dev/cmdstanr/master/vignettes/articles-online-only/opencl-files/bernoulli_logit_glm.stan\
-    ),
-  \model.stan\)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-## Data creation
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubiA8LSAyNTAwMFxuayA8LSAyMFxuWCA8LSBtYXRyaXgocm5vcm0obiAqIGspLCBuY29sID0gaylcbnkgPC0gcmJpbm9tKG4sIHNpemUgPSAxLCBwcm9iID0gcGxvZ2lzKDMgKiBYWywxXSAtIDIgKiBYWywyXSArIDEpKVxubWRhdGEgPC0gbGlzdChrID0gaywgbiA9IG4sIHkgPSB5LCBYID0gWClcbmBgYFxuYGBgIn0= --&gt;
-
-```r
-```r
-n &lt;- 25000
-k &lt;- 20
-X &lt;- matrix(rnorm(n * k), ncol = k)
-y &lt;- rbinom(n, size = 1, prob = plogis(3 * X[,1] - 2 * X[,2] + 1))
-mdata &lt;- list(k = k, n = n, y = y, X = X)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-## Compile the model 
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubW9kX2NwdSA8LSBjbWRzdGFucjo6Y21kc3Rhbl9tb2RlbChcXG1vZGVsLnN0YW5cXClcbmBgYFxuYGBgIn0= --&gt;
-
-```r
-```r
-mod_cpu &lt;- cmdstanr::cmdstan_model(\model.stan\)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-## Run the model
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc3lzdGVtLnRpbWUoZml0X2NwdSA8LSBtb2RfY3B1JHNhbXBsZShkYXRhID0gbWRhdGEsIGNoYWlucyA9IDQsIHBhcmFsbGVsX2NoYWlucyA9IDQsIHJlZnJlc2ggPSAwKSlcbmBgYFxuYGBgIn0= --&gt;
-
-```r
-```r
-system.time(fit_cpu &lt;- mod_cpu$sample(data = mdata, chains = 4, parallel_chains = 4, refresh = 0))</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-# Appendix
-
-## Working with GPUs 
-
-`cmdstan` uses OpenCL to make use of a GPU. We will need to build `cmdstan` and link against OpenCL. 
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY3BwX29wdGlvbnMgPSBsaXN0KFxuICBcXExERkxBR1MrPSAtbE9wZW5DTFxcXG4pXG5cbmNtZHN0YW5fZGlyPVxcfi8uY21kc3Rhbi1ncHVcXFxuZGlyLmNyZWF0ZShjbWRzdGFuX2RpcilcbmNtZHN0YW5yOjppbnN0YWxsX2NtZHN0YW4odmVyc2lvbj1cXDIuMzQuMVxcLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBkaXI9Y21kc3Rhbl9kaXIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGNwcF9vcHRpb25zPWNwcF9vcHRpb25zLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBjb3Jlcz1wYXJhbGxlbGx5OjphdmFpbGFibGVDb3JlcygpKVxuYGBgXG5gYGAifQ== --&gt;
-
-```r
-```r
-cpp_options = list(
-  \LDFLAGS+= -lOpenCL\
-)
-
-cmdstan_dir=\~/.cmdstan-gpu\
-dir.create(cmdstan_dir)
-cmdstanr::install_cmdstan(version=\2.34.1\,
-                          dir=cmdstan_dir,
-                          cpp_options=cpp_options,
-                          cores=parallelly::availableCores())</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-For each `cmdstan` execution leveraging GPUs we now have to point to this `cmdstan` install
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY21kc3RhbnI6OnNldF9jbWRzdGFuX3BhdGgocGFzdGUoY21kc3Rhbl9kaXIsXFxjbWRzdGFuLTIuMzQuMVxcLHNlcD1cXC9cXCkpXG5gYGBcbmBgYCJ9 --&gt;
-
-```r
-```r
-cmdstanr::set_cmdstan_path(paste(cmdstan_dir,\cmdstan-2.34.1\,sep=\/\))</code></pre>
-<p>```</p>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoidHJ5aW5nIFVSTCAnaHR0cHM6Ly9naXRodWIuY29tL3N0YW4tZGV2L2NtZHN0YW4vcmVsZWFzZXMvZG93bmxvYWQvdjIuMzQuMS9jbWRzdGFuLTIuMzQuMS50YXIuZ3onXG5Db250ZW50IHR5cGUgJ2FwcGxpY2F0aW9uL29jdGV0LXN0cmVhbScgbGVuZ3RoIDUxNTc3Njc5IGJ5dGVzICg0OS4yIE1CKVxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbmRvd25sb2FkZWQgNDkuMiBNQlxuXG5FcnJvcjogUHJvYmxlbSBleHRyYWN0aW5nIHRhcmJhbGwuIEV4aXRlZCB3aXRoIHJldHVybiBjb2RlOiAyXG4ifQ== -->
+<pre><code>trying URL &#39;https://github.com/stan-dev/cmdstan/releases/download/v2.34.1/cmdstan-2.34.1.tar.gz&#39;
+Content type &#39;application/octet-stream&#39; length 51577679 bytes (49.2 MB)
+==================================================
+downloaded 49.2 MB
+
+Error: Problem extracting tarball. Exited with return code: 2</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Please note you always can rebuild cmdstan via the
+<code>rebuild_cmdstan()</code> function.</p>
+</div>
+<div id="example" class="section level1">
+<h1>Example</h1>
+<div id="creating-a-model" class="section level2">
+<h2>Creating a model</h2>
+<p>We will download the <code>bernoulli_logit_glm</code> model from the
+<code>cmdstanr</code> vignette and save it as
+<code>model.stan</code>.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="data-creation" class="section level2">
+<h2>Data creation</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="compile-the-model" class="section level2">
+<h2>Compile the model</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="run-the-model" class="section level2">
+<h2>Run the model</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="appendix" class="section level1">
+<h1>Appendix</h1>
+<div id="working-with-gpus" class="section level2">
+<h2>Working with GPUs</h2>
+<p><code>cmdstan</code> uses OpenCL to make use of a GPU. We will need
+to build <code>cmdstan</code> and link against OpenCL.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>For each <code>cmdstan</code> execution leveraging GPUs we now have
+to point to this <code>cmdstan</code> install</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
 <!-- rnb-chunk-end -->
 </div>
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiY21kc3RhbnIiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KClRoaXMgaXMgYW4gZXhhbXBsZSBvbiBob3cgdG8gdXNlIFtjbWRzdGFucl0oaHR0cHM6Ly9tYy1zdGFuLm9yZy9jbWRzdGFuci8pLgoKIyBQcmVyZXF1aXNpdGVzIChvbmUtdGltZSBzZXR1cCkKCkZpcnN0IG9mIGFsbCwgeW91IG5lZWQgdG8gaW5zdGFsbCBgY21kc3RhbmAuIFdlIGFyZSBtYWtpbmcgdXNlIG9mIGFsbCB0aGUgY29yZXMgd2UgaGF2ZSBhdmFpbGFibGUgdmlhIHRoZSBgcGFyYWxsZWxseWAgcGFja2FnZS4gQ29tcGlsaW5nIEMrKyBjb2RlIGlzIGluaGVyZW50bHkgc2xvdyBzbyBsZXQncyBtYWtlIHN1cmUgd2UgdXNlIGFsbCBhdmFpbGFibGUgcmVzb3VyY2VzLiBBZGRpdGlvbmFsbHkgd2UgYXJlIHNwZWNpZnlpbmcgYSBzcGVjaWZpYyBgY21kc3RhbmAgdmVyc2lvbiBmb3IgYm90aCBnb29kIHByYWN0aWNlIGFuZCBpbmNyZWFzZWQgcmVwcm9kdWNpYmlsaXR5LiAKCmBgYHtyIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9CmxpYnJhcnkoY21kc3RhbnIpCmNtZHN0YW5yOjppbnN0YWxsX2NtZHN0YW4oCiAgdmVyc2lvbiA9ICIyLjM0LjEiLCAKICBjb3JlcyA9IHBhcmFsbGVsbHk6OmF2YWlsYWJsZUNvcmVzKCkKICApCmBgYAoKUGxlYXNlIG5vdGUgeW91IGFsd2F5cyBjYW4gcmVidWlsZCBjbWRzdGFuIHZpYSB0aGUgYHJlYnVpbGRfY21kc3RhbigpYCBmdW5jdGlvbi4gCgojIEV4YW1wbGUKCiMjIENyZWF0aW5nIGEgbW9kZWwKCldlIHdpbGwgZG93bmxvYWQgdGhlIGBiZXJub3VsbGlfbG9naXRfZ2xtYCBtb2RlbCBmcm9tIHRoZSBgY21kc3RhbnJgIHZpZ25ldHRlIGFuZCBzYXZlIGl0IGFzIGBtb2RlbC5zdGFuYC4gCgpgYGB7cn0Kd3JpdGUoCiAgUkN1cmw6OmdldFVSSSgKICAgICJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vc3Rhbi1kZXYvY21kc3RhbnIvbWFzdGVyL3ZpZ25ldHRlcy9hcnRpY2xlcy1vbmxpbmUtb25seS9vcGVuY2wtZmlsZXMvYmVybm91bGxpX2xvZ2l0X2dsbS5zdGFuIgogICAgKSwKICAibW9kZWwuc3RhbiIpCmBgYAoKIyMgRGF0YSBjcmVhdGlvbgoKYGBge3J9Cm4gPC0gMjUwMDAKayA8LSAyMApYIDwtIG1hdHJpeChybm9ybShuICogayksIG5jb2wgPSBrKQp5IDwtIHJiaW5vbShuLCBzaXplID0gMSwgcHJvYiA9IHBsb2dpcygzICogWFssMV0gLSAyICogWFssMl0gKyAxKSkKbWRhdGEgPC0gbGlzdChrID0gaywgbiA9IG4sIHkgPSB5LCBYID0gWCkKYGBgCgojIyBDb21waWxlIHRoZSBtb2RlbCAKCmBgYHtyfQptb2RfY3B1IDwtIGNtZHN0YW5yOjpjbWRzdGFuX21vZGVsKCJtb2RlbC5zdGFuIikKYGBgCgojIyBSdW4gdGhlIG1vZGVsCgpgYGB7cn0Kc3lzdGVtLnRpbWUoZml0X2NwdSA8LSBtb2RfY3B1JHNhbXBsZShkYXRhID0gbWRhdGEsIGNoYWlucyA9IDQsIHBhcmFsbGVsX2NoYWlucyA9IDQsIHJlZnJlc2ggPSAwKSkKYGBgCgojIEFwcGVuZGl4CgojIyBXb3JraW5nIHdpdGggR1BVcyAKCmBjbWRzdGFuYCB1c2VzIE9wZW5DTCB0byBtYWtlIHVzZSBvZiBhIEdQVS4gV2Ugd2lsbCBuZWVkIHRvIGJ1aWxkIGBjbWRzdGFuYCBhbmQgbGluayBhZ2FpbnN0IE9wZW5DTC4gCgpgYGB7cn0KY3BwX29wdGlvbnMgPSBsaXN0KAogICJMREZMQUdTKz0gLWxPcGVuQ0wiCikKCmNtZHN0YW5fZGlyPSJ+Ly5jbWRzdGFuLWdwdSIKZGlyLmNyZWF0ZShjbWRzdGFuX2RpcikKY21kc3RhbnI6Omluc3RhbGxfY21kc3Rhbih2ZXJzaW9uPSIyLjM0LjEiLAogICAgICAgICAgICAgICAgICAgICAgICAgIGRpcj1jbWRzdGFuX2RpciwKICAgICAgICAgICAgICAgICAgICAgICAgICBjcHBfb3B0aW9ucz1jcHBfb3B0aW9ucywKICAgICAgICAgICAgICAgICAgICAgICAgICBjb3Jlcz1wYXJhbGxlbGx5OjphdmFpbGFibGVDb3JlcygpKQpgYGAKCkZvciBlYWNoIGBjbWRzdGFuYCBleGVjdXRpb24gbGV2ZXJhZ2luZyBHUFVzIHdlIG5vdyBoYXZlIHRvIHBvaW50IHRvIHRoaXMgYGNtZHN0YW5gIGluc3RhbGwKCmBgYHtyfQpjbWRzdGFucjo6c2V0X2NtZHN0YW5fcGF0aChwYXN0ZShjbWRzdGFuX2RpciwiY21kc3Rhbi0yLjM0LjEiLHNlcD0iLyIpKQpgYGAK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiY21kc3RhbnIiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KClRoaXMgaXMgYW4gZXhhbXBsZSBvbiBob3cgdG8gdXNlIFtjbWRzdGFucl0oaHR0cHM6Ly9tYy1zdGFuLm9yZy9jbWRzdGFuci8pLgoKIyBQcmVyZXF1aXNpdGVzIChvbmUtdGltZSBzZXR1cCkKCkZpcnN0IG9mIGFsbCwgeW91IG5lZWQgdG8gaW5zdGFsbCBgY21kc3RhbmAuIFdlIGFyZSBtYWtpbmcgdXNlIG9mIGFsbCB0aGUgY29yZXMgd2UgaGF2ZSBhdmFpbGFibGUgdmlhIHRoZSBgcGFyYWxsZWxseWAgcGFja2FnZS4gQ29tcGlsaW5nIEMrKyBjb2RlIGlzIGluaGVyZW50bHkgc2xvdyBzbyBsZXQncyBtYWtlIHN1cmUgd2UgdXNlIGFsbCBhdmFpbGFibGUgcmVzb3VyY2VzLiBBZGRpdGlvbmFsbHkgd2UgYXJlIHNwZWNpZnlpbmcgYSBzcGVjaWZpYyBgY21kc3RhbmAgdmVyc2lvbiBmb3IgYm90aCBnb29kIHByYWN0aWNlIGFuZCBpbmNyZWFzZWQgcmVwcm9kdWNpYmlsaXR5LiAKCmBgYHtyIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9CmxpYnJhcnkoY21kc3RhbnIpCmNtZHN0YW5yOjppbnN0YWxsX2NtZHN0YW4oCiAgdmVyc2lvbiA9ICIyLjM1LjAiLCAKICBjb3JlcyA9IHBhcmFsbGVsbHk6OmF2YWlsYWJsZUNvcmVzKCkKICApCmBgYAoKUGxlYXNlIG5vdGUgeW91IGFsd2F5cyBjYW4gcmVidWlsZCBjbWRzdGFuIHZpYSB0aGUgYHJlYnVpbGRfY21kc3RhbigpYCBmdW5jdGlvbi4gCgojIEV4YW1wbGUKCiMjIENyZWF0aW5nIGEgbW9kZWwKCldlIHdpbGwgZG93bmxvYWQgdGhlIGBiZXJub3VsbGlfbG9naXRfZ2xtYCBtb2RlbCBmcm9tIHRoZSBgY21kc3RhbnJgIHZpZ25ldHRlIGFuZCBzYXZlIGl0IGFzIGBtb2RlbC5zdGFuYC4gCgpgYGB7cn0Kd3JpdGUoCiAgUkN1cmw6OmdldFVSSSgKICAgICJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vc3Rhbi1kZXYvY21kc3RhbnIvbWFzdGVyL3ZpZ25ldHRlcy9hcnRpY2xlcy1vbmxpbmUtb25seS9vcGVuY2wtZmlsZXMvYmVybm91bGxpX2xvZ2l0X2dsbS5zdGFuIgogICAgKSwKICAibW9kZWwuc3RhbiIpCmBgYAoKIyMgRGF0YSBjcmVhdGlvbgoKYGBge3J9Cm4gPC0gMjUwMDAKayA8LSAyMApYIDwtIG1hdHJpeChybm9ybShuICogayksIG5jb2wgPSBrKQp5IDwtIHJiaW5vbShuLCBzaXplID0gMSwgcHJvYiA9IHBsb2dpcygzICogWFssMV0gLSAyICogWFssMl0gKyAxKSkKbWRhdGEgPC0gbGlzdChrID0gaywgbiA9IG4sIHkgPSB5LCBYID0gWCkKYGBgCgojIyBDb21waWxlIHRoZSBtb2RlbCAKCmBgYHtyfQptb2RfY3B1IDwtIGNtZHN0YW5yOjpjbWRzdGFuX21vZGVsKCJtb2RlbC5zdGFuIikKYGBgCgojIyBSdW4gdGhlIG1vZGVsCgpgYGB7cn0Kc3lzdGVtLnRpbWUoZml0X2NwdSA8LSBtb2RfY3B1JHNhbXBsZShkYXRhID0gbWRhdGEsIGNoYWlucyA9IDQsIHBhcmFsbGVsX2NoYWlucyA9IDQsIHJlZnJlc2ggPSAwKSkKYGBgCgojIEFwcGVuZGl4CgojIyBXb3JraW5nIHdpdGggR1BVcyAKCmBjbWRzdGFuYCB1c2VzIE9wZW5DTCB0byBtYWtlIHVzZSBvZiBhIEdQVS4gV2Ugd2lsbCBuZWVkIHRvIGJ1aWxkIGBjbWRzdGFuYCBhbmQgbGluayBhZ2FpbnN0IE9wZW5DTC4gCgpgYGB7cn0KY3BwX29wdGlvbnMgPSBsaXN0KAogICJMREZMQUdTKz0gLWxPcGVuQ0wiCikKCmNtZHN0YW5fZGlyPSJ+Ly5jbWRzdGFuLWdwdSIKZGlyLmNyZWF0ZShjbWRzdGFuX2RpcikKY21kc3RhbnI6Omluc3RhbGxfY21kc3Rhbih2ZXJzaW9uPSIyLjM1LjAiLAogICAgICAgICAgICAgICAgICAgICAgICAgIGRpcj1jbWRzdGFuX2RpciwKICAgICAgICAgICAgICAgICAgICAgICAgICBjcHBfb3B0aW9ucz1jcHBfb3B0aW9ucywKICAgICAgICAgICAgICAgICAgICAgICAgICBjb3Jlcz1wYXJhbGxlbGx5OjphdmFpbGFibGVDb3JlcygpKQpgYGAKCkZvciBlYWNoIGBjbWRzdGFuYCBleGVjdXRpb24gbGV2ZXJhZ2luZyBHUFVzIHdlIG5vdyBoYXZlIHRvIHBvaW50IHRvIHRoaXMgYGNtZHN0YW5gIGluc3RhbGwKCmBgYHtyfQpjbWRzdGFucjo6c2V0X2NtZHN0YW5fcGF0aChwYXN0ZShjbWRzdGFuX2RpciwiY21kc3Rhbi0yLjM1LjAiLHNlcD0iLyIpKQpgYGAK</div>
 
 
 

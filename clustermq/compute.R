@@ -3,19 +3,19 @@ compute <- function(n) {
   library(palmerpenguins)
   library(dplyr)
   peng <- penguins %>% 
+    filter(!is.na(species) & !is.na(sex)) %>%
     mutate(
       species = as.factor(species),
       sex = as.factor(sex)
     ) %>% 
-    sample_n(100)
-  glm(body_mass_g ~ species + sex, data = peng)
+    sample_n(333)
+  res<-glm(body_mass_g ~ species + sex, data = peng)
 }
 
 library(clustermq) 
-
-samples=1000
+samples=2
 # run a big-ish compute job
-res <- clustermq::Q(compute, n = 1:samples, n_jobs = 2,chunk_size=10)
+res <- clustermq::Q(compute, n = 1:samples, n_jobs = 1,chunk_size=10)
 
 # create new data
 new_dat <- tibble::tribble(

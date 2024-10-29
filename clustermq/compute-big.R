@@ -2,6 +2,7 @@
 
 compute <- function(n) {
   peng <- penguins %>% 
+    filter(!is.na(species) & !is.na(sex)) %>%
     mutate(
       species = as.factor(species),
       sex = as.factor(sex)

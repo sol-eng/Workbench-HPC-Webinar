@@ -1,0 +1,91 @@
+---
+title: "clustermq"
+author: "Michael Mayer"
+format: html
+editor: visual
+execute:
+  echo: true
+  output: true
+---
+
+## Code
+
+First we load all needed packages
+
+```{r}
+#| output: false
+library(clustermq)
+library(palmerpenguins)
+library(dplyr)
+library(tibble)
+library(ggplot2)
+library(purrr)
+```
+
+Let's define our `compute()` function. 
+
+```{r}
+compute <- function(n) {
+  peng <- penguins %>%
+    mutate(species = as.factor(species), sex = as.factor(sex)) %>%
+    sample_n(333)
+  glm(body_mass_g ~ species + sex, data = peng)
+}
+```
+
+Note: In the above function `n` is an unused argument. 
+
+Let's run this function 
+
+```{r}
+compute(1)
+```
+Let's run the same function `samples` times using `clustermq`'s `Q()` function 
+
+```{r}
+#| output: false
+samples <- 1000
+set.seed(1234)
+# run a big-ish compute job
+res <- clustermq::Q(compute,
+                    n = 1:samples,
+                    n_jobs = 2,
+                    chunk_size = 10,
+  pkgs = c("dplyr", "palmerpenguins"))
+```
+
+
+Instead of the `Q()` function we also could have used a `foreach` loop 
+
+```{r}
+#| output: false
+library(foreach)
+library(doRNG)
+samples <- 1000
+set.seed(1234)
+register_dopar_cmq(
+  n_jobs = 2,
+  chunk_size = 10,
+  pkgs = c("dplyr", "palmerpenguins")
+)
+res2 <- foreach(n = 1:samples) %dorng% compute(n)
+```
+
+Let's create a prediction on the body mass for male Chinstrap penguins. 
+```{r}
+# create new data
+new_dat <- tibble::tribble(~ species, ~ sex, "Chinstrap", "male")
+
+# create prediction for each of the models
+preds <- tibble(mass = map_dbl(res, predict, new_dat))
+```
+
+
+We finally plot the results. 
+```{r}
+# plot the result
+library(ggplot2)
+ggplot(preds, aes(x = mass)) +
+  geom_histogram(bins = samples / 50) +
+  ggtitle("Ensemble model prediction of mass of male Chinstrap penguins")
+```

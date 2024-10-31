@@ -50,9 +50,7 @@ compute_task <- function(n) {
 
 This task is then run `samples` times in a `future_map` call
 
-
-
-Now we need to setup the mirai cluster daemons, where we deal with the SLURM details in the `remote_config()` function of the `mirai::daemons()` call. 
+Now we need to setup the mirai cluster daemons, where we deal with the SLURM details in the `remote_config()` function of the `mirai::daemons()` call.
 
 As previously with clustermq, we use 2 cores which will equal two SLURM jobs.
 
@@ -70,13 +68,13 @@ As previously with clustermq, we use 2 cores which will equal two SLURM jobs.
     dispatcher = TRUE
   )
 ```
-  
-You can check via `mirai::daemons()` on the status of your workers. 
-  
-We now can use `mirai_cluster` to "plan" the `future` environment: 
 
-````{r}
-  plan(mirai_cluster)
+You can check via `mirai::daemons()` on the status of your workers.
+
+We now can use `mirai_cluster` to "plan" the `future` environment:
+
+```{r}
+plan(mirai_cluster)
 ```
 
 Finally we can run our code in a `future_map()` call.
@@ -93,13 +91,14 @@ res <- 1:samples |>
 
 Note in the above the mention of `furrr_options` `seed=TRUE` to ensure reproducibilty (random number generation consistency) and the attachment of the two needed packages for the `compute_task` function.
 
-Before continuing with the post precessing of our data, let's shutdown the worker nodes 
+Before continuing with the post precessing of our data, let's shutdown the worker nodes
 
 ```{r}
 daemons(0)
 ```
 
-Let's create a prediction on the body mass for male Chinstrap penguins. 
+Let's create a prediction on the body mass for male Chinstrap penguins.
+
 ```{r}
 # create new data
 new_dat <- tibble::tribble(~ species, ~ sex, "Chinstrap", "male")
@@ -108,8 +107,8 @@ new_dat <- tibble::tribble(~ species, ~ sex, "Chinstrap", "male")
 preds <- tibble(mass = map_dbl(res, predict, new_dat))
 ```
 
+We finally plot the results.
 
-We finally plot the results. 
 ```{r}
 # plot the result
 library(ggplot2)

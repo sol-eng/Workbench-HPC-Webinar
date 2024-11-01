@@ -75,6 +75,21 @@ compute <- function(samples) {
 
 Note in the above the mention of `furrr_options` `seed=TRUE` to ensure reproducibilty (random number generation consistency) and the attachment of the two needed packages for the `compute_task` function.
 
+Since we will likely run within a workbench session, we need to make sure that SLURM CLI commands such as `sbatch` and `srun` work and are able to reach outside the current session, for that purpose we clean out all the SLURM environment variables
+
+```{r}
+my_envs<-Sys.getenv()
+Sys.unsetenv(
+  names(
+    my_envs[
+      sapply("SLURM", 
+            function(p) grepl(p, names(my_envs), fixed = TRUE)
+            )
+      ]
+    )
+  )
+```
+
 Because `mirai` is an asynchronous framework, for our benchmarking purposes we need to ensure that all workers are online before running any actual computations. For this purposes we need an additional helper function
 
 ```{r}
@@ -145,8 +160,7 @@ benchmark_cluster <- function(cores, samples, cwd, memory = 1024) {
   
   setup_time <- system.time(cl <- makeClusterPSOCK(
     workers,
-    rscript_startup = paste0('.libPaths("', .libPaths()[1], '")'),
-    setup_strategy = "parallel"
+    rscript_startup = paste0('.libPaths("', .libPaths()[1], '")')
   ))[3]
   
   # plan cluster future
@@ -172,7 +186,7 @@ library(purrr)
 library(dplyr)
 
 cores <- 2 ** (0:6)
-samples <- 100000
+samples <- 10000
 
 df <- map_dfr(cores, function(x) {
   memory <- 1024 
@@ -236,4 +250,3 @@ ggplot(df, aes(x = cores, y = setup_time, color = type)) +
 ", subtitle = "") +
   theme_grey(base_size = 14)
 ```
-

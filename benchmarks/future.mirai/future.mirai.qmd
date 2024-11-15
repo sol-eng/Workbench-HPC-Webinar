@@ -35,6 +35,12 @@ library(tibble)
 library(ggplot2)
 ```
 
+We set some quarto option to allow more than the default 128 connections on R 4.4.0+
+
+```{r}
+Sys.setenv(QUARTO_KNITR_RSCRIPT_ARGS="--max-connections=1024")
+```
+
 ### Various function definitions
 
 First we define our compute task function
@@ -160,6 +166,7 @@ benchmark_cluster <- function(cores, samples, cwd, memory = 1024) {
   
   setup_time <- system.time(cl <- makeClusterPSOCK(
     workers,
+#    rscript_args = c("--max-connections=1024"),
     rscript_startup = paste0('.libPaths("', .libPaths()[1], '")')
   ))[3]
   
@@ -178,39 +185,49 @@ benchmark_cluster <- function(cores, samples, cwd, memory = 1024) {
 
 ### Run the benchmark
 
-First, we run the benchmark on 1 to 64 cores in factors of sqrt(2) increments.
+First, we run the benchmark on 1 to 256 cores in factors of sqrt(2) increments.
 
 ```{r}
 #| output: false
 library(purrr)
 library(dplyr)
 
-cores <- 2 ** (0:6)
-samples <- 10000
+cores <- 2 ** (0:7)
+samples <- c(2500) #,5000,10000,25000,50000,100000)
 
-df <- map_dfr(cores, function(x) {
+params<-expand.grid(cores=cores,samples=samples)
+
+df <- map2_dfr(params$cores, params$samples, function(cores,samples) {
   memory <- 1024 
-  mirai_time <- benchmark_mirai(x, samples, memory = memory) %>% 
-    mutate(type = "mirai")
-  cluster_time <- benchmark_cluster(x, samples, memory = memory) %>% 
+  cluster_time <- benchmark_cluster(cores, samples, memory = memory) %>% 
     mutate(type = "cluster")
+  mirai_time <- benchmark_mirai(cores, samples, memory = memory) %>% 
+    mutate(type = "mirai")
   bind_rows(mirai_time, cluster_time)
 })
 
-base_time_mirai <- df %>% 
-  filter(type == "mirai", cores == 1) %>% 
-  pluck("compute_time")
-base_time_cluster <- df %>% 
-  filter(type == "cluster", cores == 1) %>% 
-  pluck("compute_time")
+base_time_cluster <- df %>%
+  filter(type == "cluster", cores == 1) %>%
+  select(samples, compute_time) %>%
+  rename(base_compute_time_cluster = compute_time)
 
-df <- df %>% mutate(
-  speedup = if_else(
-    type == "mirai",
-    base_time_mirai / compute_time,
-    base_time_cluster / compute_time
+base_time_mirai <- df %>%
+  filter(type == "mirai", cores == 1) %>%
+  select(samples, compute_time) %>%
+  rename(base_compute_time_mirai = compute_time)
+
+
+
+df <- df %>%
+  left_join(base_time_mirai, by = "samples") %>%
+  left_join(base_time_cluster, by = "samples") %>%
+  mutate(
+    speedup = if_else(
+      type == "mirai",
+      base_compute_time_mirai / compute_time,
+      base_compute_time_cluster / compute_time
+    )
   )
-)
 ```
 
 ### Analyze and plot the results
@@ -218,35 +235,69 @@ df <- df %>% mutate(
 Finally we plot the results
 
 ```{r}
-ggplot(df, aes(x = cores, y = speedup, color = type)) +
+library(ggplot2)
+
+# Define color palettes for each type
+mirai_colors <- colorRampPalette(c("green", "blue"))(length(unique(df$samples)))
+cluster_colors <- colorRampPalette(c("orange", "red"))(length(unique(df$samples)))
+
+# Create a named vector of colors for the interaction levels
+interaction_levels <- interaction(df$samples, df$type, drop = TRUE)
+colors <- sapply(levels(interaction_levels), function(level) {
+  parts <- strsplit(level, "\\.")[[1]]
+  sample_value <- as.numeric(parts[1])
+  sample_index <- match(sample_value, sort(unique(df$samples)))  # Ensure correct index
+  if (parts[2] == "mirai") {
+    mirai_colors[sample_index]
+  } else {
+    cluster_colors[sample_index]
+  }
+})
+
+names(colors) <- levels(interaction_levels)
+
+ggplot(df, 
+       aes(x = cores, 
+           y = speedup, 
+           color = interaction(samples, type, drop = TRUE), 
+           group = interaction(samples, type, drop = TRUE))) +
   geom_line() +
   geom_point(size = 2) +
-  scale_color_manual(values = c("red", "blue")) +
   scale_x_log10(breaks = df$cores) +
   scale_y_log10() +
-  labs(x = "# of cores", y = "speed up") +
+  scale_color_manual(values = colors) +
+  labs(x = "# of cores", y = "Speedup", color = "Samples & Type") +
   ggtitle("Speedup", subtitle = "") +
   theme_grey(base_size = 14)
 
 
-ggplot(df, aes(x = cores, y = compute_time, color = type)) +
+ggplot(df, 
+       aes(x = cores, 
+           y = compute_time, 
+           color = interaction(samples, type, drop = TRUE), 
+           group = interaction(samples, type, drop = TRUE))) +
   geom_line() +
   geom_point(size = 2) +
-  scale_color_manual(values = c("red", "blue")) +
   scale_x_log10(breaks = df$cores) +
   scale_y_log10() +
-  labs(x = "# of cores", y = "time elapsed [s]") +
+  scale_color_manual(values = colors) +
+  labs(x = "# of cores", y = "Time elapsed [s]", color = "Samples & Type") +
   ggtitle("Compute Time", subtitle = "") +
-  theme_grey(base_size = 14)
+  theme_grey(base_size = 14) 
 
-ggplot(df, aes(x = cores, y = setup_time, color = type)) +
+
+ggplot(df, 
+       aes(x = cores, 
+           y = setup_time, 
+           color = interaction(samples, type, drop = TRUE), 
+           group = interaction(samples, type, drop = TRUE))) +
   geom_line() +
   geom_point(size = 2) +
-  scale_color_manual(values = c("red", "blue")) +
   scale_x_log10(breaks = df$cores) +
   scale_y_log10() +
-  labs(x = "# of cores", y = "time_elapsed [s]") +
+  scale_color_manual(values = colors) +
+  labs(x = "# of cores", y = "Time elapsed [s]", color = "Samples & Type") +
   ggtitle("Setup Time
 ", subtitle = "") +
-  theme_grey(base_size = 14)
+  theme_grey(base_size = 14) 
 ```

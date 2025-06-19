@@ -1,0 +1,166 @@
+---
+title: Mirai Benchmarks
+description: This is a set of simple benchmarks showcasing the scalability of `r-lib/mirai`
+format:
+  html:
+    code-overflow: wrap
+    toc: true
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# Introduction
+
+# Setup
+
+```{r}
+#| context: setup
+library(mirai)
+library(microbenchmark)
+library(ggplot2)
+library(dplyr)
+library(stringr)
+```
+
+# Compute Task
+
+```{r}
+compute_task <- function(n) {
+  library(palmerpenguins)
+  library(dplyr)
+  peng <- penguins %>%
+    mutate(species = as.factor(species), sex = as.factor(sex)) %>%
+    sample_n(200)
+  glm(body_mass_g ~ species + sex, data = peng)$coefficients
+}
+```
+
+# Benchmark run 
+
+We use by default 1 GB of memory and 1 cores in the mirai call. We however make use of the array task feature to scale out to more than 1 core. 
+
+```{r}
+memory <- 1024
+cores <- 1
+```
+
+We also use a couple of utility functions
+
+```{r}
+# ensure that all mirai workers are up and running before we hit them with work
+wait_for_mirai <- function() {
+  connections <- 0
+  while (connections < tasks) {
+    connections <- daemons()$connections
+    print(sprintf("%s / %s", connections, tasks))
+    Sys.sleep(10)
+  }
+}
+
+# extract the mean time from microbenchmark output
+extract_time <- function(x) { 
+  median((as.data.frame(data) %>% filter(str_detect(expr, as.character(x))) 
+                              %>% select("time")
+          )$time
+         )
+  }
+```
+
+The main loop 
+
+```{r}
+
+# empty results tibble to start with 
+results<-tibble('samples'=0,'tasks'=0,'time'=0,.rows=0)
+
+# loop from 4 to 32 tasks 
+for (i in 7:2) {
+  tasks = 2 ** i
+  
+  # start mirai daemons
+  daemons(
+    cores,
+    url = host_url(),
+    remote = cluster_config(
+      command = "sbatch",
+      options = sprintf(
+        "#SBATCH --job-name=mirai
+               #SBATCH --mem=1G
+               #SBATCH --partition=all
+               #SBATCH --array=1-%s",
+        tasks
+      ),
+      rscript = file.path(R.home("bin"), "Rscript")
+    )
+  )
+  
+  wait_for_mirai()
+  
+  # run benchmark for sample size of 128...16384
+  data <- microbenchmark(
+    res <- mirai_map(1:128, compute_task)[.flat],
+    res <- mirai_map(1:256, compute_task)[.flat],
+    res <- mirai_map(1:512, compute_task)[.flat],
+    res <- mirai_map(1:1024, compute_task)[.flat],
+    res <- mirai_map(1:2048, compute_task)[.flat],
+    res <- mirai_map(1:4096, compute_task)[.flat],
+    res <- mirai_map(1:8192, compute_task)[.flat],
+    res <- mirai_map(1:16384, compute_task)[.flat],
+    times = 10
+  )
+  
+  # process results and add to tibble 
+  for (j in 7:14) {
+    samples <- 2**j
+    results <- results %>% add_row(samples=samples,
+                                   tasks=tasks,
+                                   time=extract_time(samples)
+                                   )
+  }
+  
+  # shut down all mirai daemons
+  daemons(0)
+  
+}
+
+saveRDS(results,file="res.rds")
+```
+
+```{r}
+ggplot(results, aes(x = samples, y = time / 1e9, color = factor(tasks), group = factor(tasks))) +
+  geom_line() +
+  geom_point() +
+  scale_color_discrete(name = "Tasks") +
+  labs(title = "Time vs Samples for Different Task Counts",
+       x = "Samples",
+       y = "Time [seconds]") 
+```
+
+
+
+```{r}
+ggplot(results, aes(x = tasks, y = time / 1e9, color = factor(samples), group = factor(samples))) +
+  geom_line() +
+  geom_point() +
+  scale_color_discrete(name = "Samples") +
+  labs(title = "Time elapsed vs Tasks for Different Samples Counts",
+       x = "Tasks",
+       y = "Time [seconds]") 
+```
+
+```{r}
+#calculate speedup
+results <- results %>%
+  group_by(samples) %>%
+  mutate(speedup = min(tasks) * max(time) / time) %>%
+  ungroup()
+
+ggplot(results, aes(x = tasks, y = speedup, color = factor(samples), group = factor(samples))) +
+  geom_line() +
+  geom_point() +
+  scale_color_discrete(name = "Samples") +
+  labs(title = "Speedup vs Tasks for Different Samples Counts",
+       x = "Tasks",
+       y = "Speedup") 
+```

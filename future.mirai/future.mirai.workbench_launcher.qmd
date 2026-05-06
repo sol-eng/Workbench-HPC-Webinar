@@ -50,26 +50,44 @@ compute_task <- function(n) {
 
 This task is then run `samples` times in a `future_map` call
 
+We also use a couple of utility functions
+
+```{r}
+# ensure that all mirai workers are up and running before we hit them with work
+wait_for_mirai <- function() {
+  connections <- 0
+  while (connections < cores) {
+    connections <- status()$connections
+    print(sprintf("%s / %s", connections, cores))
+    Sys.sleep(1)
+  }
+}
+```
+
 Now we need to setup the mirai cluster daemons, where we deal with the SLURM details in the `remote_config()` function of the `mirai::daemons()` call.
 
 As previously with clustermq, we use 2 cores which will equal two SLURM jobs.
 
 ```{r}
   cores <- 2
+  # start mirai daemons
   daemons(
     cores,
-    url = host_url(ws = TRUE, tls = TRUE),
-    remote = remote_config(
-      command = "sbatch",
-      args = c("--mem 1024", "-p interactive", "-n 1", "--wrap", "."),
-      rscript = file.path(R.home("bin"), "Rscript"),
-      quote = TRUE
+    url = host_url(),
+    remote = http_config(
+     resource_profile = "default"
     ),
-    dispatcher = TRUE
+    rscript = file.path(R.home("bin"), "Rscript")
   )
 ```
 
 You can check via `mirai::daemons()` on the status of your workers.
+
+For automated execution we use the `wait()` function defined above
+
+```{r}
+wait_for_mirai()
+```
 
 We now can use `mirai_cluster` to "plan" the `future` environment:
 

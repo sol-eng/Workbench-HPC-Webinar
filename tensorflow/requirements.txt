@@ -13,7 +13,7 @@ h5py==3.11.0
 idna==3.7
 keras==3.13.2
 libclang==18.1.1
-Markdown==3.6
+Markdown==3.8.1
 MarkupSafe==2.1.5
 ml-dtypes==0.3.2
 numpy==1.26.4

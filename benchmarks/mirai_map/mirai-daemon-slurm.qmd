@@ -1,6 +1,6 @@
 ---
-title: Mirai Benchmarks
-description: This is a set of simple benchmarks showcasing the scalability of `r-lib/mirai`
+title: Mirai Benchmarks 
+description: This is a set of simple benchmarks showcasing the scalability of `r-lib/mirai`, specifically for http_config() with workbench jobs
 format:
   html:
     code-overflow: wrap
@@ -52,9 +52,9 @@ We also use a couple of utility functions
 wait_for_mirai <- function() {
   connections <- 0
   while (connections < tasks) {
-    connections <- daemons()$connections
+    connections <- status()$connections
     print(sprintf("%s / %s", connections, tasks))
-    Sys.sleep(10)
+    Sys.sleep(1)
   }
 }
 
@@ -74,11 +74,12 @@ The main loop
 # empty results tibble to start with 
 results<-tibble('samples'=0,'tasks'=0,'time'=0,.rows=0)
 
-# loop from 4 to 32 tasks 
+# loop from 4 to 128 tasks 
 for (i in 7:2) {
   tasks = 2 ** i
   
   # start mirai daemons
+  # With SLURM we can use Array Tasks which keeps the pressure on the scheduler minimal
   daemons(
     cores,
     url = host_url(),
@@ -86,13 +87,12 @@ for (i in 7:2) {
       command = "sbatch",
       options = sprintf(
         "#SBATCH --job-name=mirai
-               #SBATCH --mem=1G
-               #SBATCH --partition=all
-               #SBATCH --array=1-%s",
+        #SBATCH --mem=1G
+        #SBATCH --partition=all
+        #SBATCH --array=1-%s",
         tasks
       ),
-      rscript = file.path(R.home("bin"), "Rscript")
-    )
+    rscript = file.path(R.home("bin"), "Rscript")
   )
   
   wait_for_mirai()
